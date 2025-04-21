@@ -1,31 +1,35 @@
-name: Build and Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - develop
 
+permissions:
+  contents: write
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: ✅ ソースコードをチェックアウト
+      - name: 📥 Checkout
         uses: actions/checkout@v3
 
-      - name: 🧱 Node.js をセットアップ
+      - name: 🧱 Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
-      - name: 📦 パッケージをインストール
+      - name: 📦 Install dependencies
         run: npm install
 
-      - name: 🛠 ビルド
+      - name: 🛠 Build the project
         run: npm run build
 
-      - name: 🚀 GitHub Pages にデプロイ
+      - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+          publish_branch: gh-pages
